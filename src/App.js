@@ -7,7 +7,7 @@ import FullPetView from "./components/fullPetView";
 const AppContainer = Styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: ${(props) => props.theme.colors.lightblue};
+  background-color: ${(props) => props.theme.colors.blue};
 `;
 
 export const API = "petstore.swagger.io/v2";

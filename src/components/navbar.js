@@ -9,12 +9,12 @@ const Fixed = styled.div`
 `;
 const Navbar = styled.div`
   width: auto;
-  background-color: ${(props) => props.theme.colors.blue};
+  background-color: ${(props) => props.theme.colors.lightblue};
   display: grid;
   padding: 0 20px;
   grid-template-columns: 1fr auto;
   > h1 {
-    color: ${(props) => props.theme.colors.lightblue};
+    color: ${(props) => props.theme.colors.darkblue};
   }
   > div {
     display: grid;
@@ -23,13 +23,18 @@ const Navbar = styled.div`
     justify-content: flex-end;
     gap: 2em;
   }
+  button {
+    background-color: ${(props) => props.theme.colors.darkblue};
+    color: ${(props) => props.theme.colors.lightblue};
+  }
 `;
 //TODO move to another file.
 const Avatar = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 5em;
-  background-color: ${(props) => props.theme.colors.lightblue};
+  background-color: ${(props) => props.theme.colors.darkblue};
+  color: ${(props) => props.theme.colors.lightblue};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,9 +45,9 @@ const Navigation = () => {
   return (
     <Fixed>
       <Navbar>
-        <h1>Pet Center</h1>
+        <h1>PET CENTER</h1>
         <div>
-          <Button disabled={true}>Add</Button>
+          <Button>Add</Button>
           <Button disabled={true}>Log in</Button>
           <Avatar>
             <span className="material-symbols-outlined">person</span>
