@@ -9,12 +9,12 @@ const Fixed = styled.div`
 `;
 const Navbar = styled.div`
   width: auto;
-  background-color: ${(props) => props.theme.colors.lightblue};
+  background-color: ${(props) => props.theme.colors.darkgray};
   display: grid;
   padding: 0 20px;
   grid-template-columns: 1fr auto;
   > h1 {
-    color: ${(props) => props.theme.colors.darkblue};
+    color: ${(props) => props.theme.colors.white};
   }
   > div {
     display: grid;
@@ -24,17 +24,21 @@ const Navbar = styled.div`
     gap: 2em;
   }
   button {
-    background-color: ${(props) => props.theme.colors.darkblue};
-    color: ${(props) => props.theme.colors.lightblue};
+    background-color: ${(props) => props.theme.colors.blue};
+    color: ${(props) => props.theme.colors.white};
   }
 `;
 //TODO move to another file.
 const Avatar = styled.div`
   width: 50px;
   height: 50px;
+  box-shadow: 1px 1px 3px black;
   border-radius: 5em;
-  background-color: ${(props) => props.theme.colors.darkblue};
-  color: ${(props) => props.theme.colors.lightblue};
+  background-color: ${(props) => props.theme.colors.blue};
+
+  span {
+    color: ${(props) => props.theme.colors.white};
+  }
   display: flex;
   justify-content: center;
   align-items: center;

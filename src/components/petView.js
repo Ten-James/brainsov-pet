@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { Appcontext } from "../App";
 import { Button } from "./button";
 const StyledView = styled.div`
-  background-color: ${(props) => props.theme.colors.darkblue};
-  color: ${(props) => props.theme.colors.lightblue};
+  background-color: ${(props) => props.theme.colors.darkgray};
+  color: ${(props) => props.theme.colors.white};
   display: grid;
   grid-template-columns: 1fr 2fr;
   border: none;
@@ -12,6 +12,8 @@ const StyledView = styled.div`
   height: 20em;
   margin: 0.5em;
   padding: 10px 20px;
+  box-shadow: 3px 3px 5px black;
+  border-radius: 0.5rem;
 `;
 
 const FakeImg = styled.div`
@@ -19,7 +21,7 @@ const FakeImg = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  color: ${(props) => props.theme.colors.lightblue};
+  color: ${(props) => props.theme.colors.blue};
   > span {
     font-size: 3em;
   }
@@ -32,7 +34,9 @@ const PetViewContainer = styled.div`
   align-items: center;
   gap: 1em;
   width: 100%;
+  height: 100%;
   flex-wrap: wrap;
+  overflow-y: scroll;
 `;
 
 const RightDiv = styled.div`
