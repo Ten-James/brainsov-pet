@@ -17,7 +17,7 @@ export const Appcontext = createContext();
 function App() {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [filter, setFilter] = useState({ sold: false, available: false, reserved: false, category: "" });
+  const [filter, setFilter] = useState({ sold: false, available: false, pending: false, category: "" });
   const [error, setError] = useState(null);
 
   //TODO separated file

@@ -45,7 +45,7 @@ const FilterPanel = () => {
         />
         <Checkbox
           OnClick={() => {
-            setFilter({ ...filter, Reserved: !filter.Reserved });
+            setFilter({ ...filter, Pending: !filter.Pending });
           }}
           name="Pending"
         />

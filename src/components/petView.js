@@ -63,9 +63,12 @@ export const PetView = () => {
     setPets(
       data.filter((pet) => {
         if (filter.category && pet.category.name !== filter.category) return false;
-        if (filter.Sold && pet.status !== "sold") return false;
-        if (filter.Available && pet.status !== "available") return false;
-        if (filter.Reserved && pet.status !== "reserved") return false;
+        const filtStatuts = ["available", "sold", "pending"];
+        if (!filter.Sold) filtStatuts.splice(filtStatuts.indexOf("sold"), 1);
+        if (!filter.Available) filtStatuts.splice(filtStatuts.indexOf("available"), 1);
+        if (!filter.Pending) filtStatuts.splice(filtStatuts.indexOf("pending"), 1);
+        if (filtStatuts.length === 0) return true;
+        if (!filtStatuts.includes(pet.status)) return false;
         return true;
       })
     );
