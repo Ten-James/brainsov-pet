@@ -5,6 +5,7 @@ import FilterPanel from "./filterpanel";
 
 const Fixed = styled.div`
   position: fixed;
+  z-index: 10;
   width: 100%;
 `;
 const Navbar = styled.div`

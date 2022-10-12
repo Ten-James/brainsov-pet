@@ -28,13 +28,13 @@ const FakeImg = styled.div`
 `;
 
 const PetViewContainer = styled.div`
-  padding-top: 7em;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1em;
   width: 100%;
-  height: 100%;
+  padding-top: 15vh;
+  height: 90vh;
   flex-wrap: wrap;
   overflow-y: scroll;
 `;
@@ -45,6 +45,15 @@ const RightDiv = styled.div`
 `;
 
 const ButtonDiv = styled.div`
+  psition: relative;
+  right: 0;
+  width: fit-content;
+  text-align: right;
+  transform: translate(3em, 0.3em);
+  background-color: ${(props) => props.theme.colors.white};
+  padding: 0.8em;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 5px black;
   display: flex;
   justify-content: spac-between;
   align-items: center;
@@ -58,27 +67,51 @@ const Capital = (str) => {
 
 export const PetView = () => {
   const [pets, setPets] = useState([]);
-  const { data, filter, changeStatus } = useContext(Appcontext);
+  const {
+    soldPets,
+    availablePets,
+    pendingPets,
+    FetchSold,
+    FetchAvailable,
+    FetchPending,
+    statusFilter,
+    categoryFilter,
+    changeStatus,
+  } = useContext(Appcontext);
+
   useMemo(() => {
-    setPets(
-      data.filter((pet) => {
-        if (filter.category && pet.category.name !== filter.category) return false;
-        const filtStatuts = ["available", "sold", "pending"];
-        if (!filter.Sold) filtStatuts.splice(filtStatuts.indexOf("sold"), 1);
-        if (!filter.Available) filtStatuts.splice(filtStatuts.indexOf("available"), 1);
-        if (!filter.Pending) filtStatuts.splice(filtStatuts.indexOf("pending"), 1);
-        if (filtStatuts.length === 0) return true;
-        if (!filtStatuts.includes(pet.status)) return false;
-        return true;
-      })
-    );
-  }, [data, filter]);
+    if (statusFilter === "sold") FetchSold();
+    if (statusFilter === "available") FetchAvailable();
+    if (statusFilter === "pending") FetchPending();
+  }, [statusFilter]);
+  useMemo(() => {
+    const tryGetCategoryName = (pet) => {
+      if (!pet.category) return "";
+      return pet.category.name;
+    };
+    if (statusFilter === "sold") {
+      if (!soldPets) return;
+      setPets(soldPets.filter((pet) => tryGetCategoryName(pet) === categoryFilter || categoryFilter === "All"));
+    }
+    if (statusFilter === "available") {
+      if (!availablePets) return;
+      setPets(availablePets.filter((pet) => tryGetCategoryName(pet) === categoryFilter || categoryFilter === "All"));
+    }
+    if (statusFilter === "pending") {
+      if (!pendingPets) return;
+      setPets(pendingPets.filter((pet) => tryGetCategoryName(pet) === categoryFilter || categoryFilter === "All"));
+    }
+  }, [soldPets, availablePets, pendingPets, statusFilter, categoryFilter]);
+  console.log(soldPets && soldPets.length, availablePets && availablePets.length, pendingPets && pendingPets.length);
   return (
     <PetViewContainer>
-      {pets &&
+      {pets ? (
         pets.map((pet, index) => {
           return <Pet key={index} pet={pet} changeStatus={changeStatus} />;
-        })}
+        })
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PetViewContainer>
   );
 };

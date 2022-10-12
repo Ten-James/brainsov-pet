@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Combobox from "./combobox";
-import Checkbox from "./checkbox";
+import Radiobox from "./radio";
 import { Appcontext } from "../App";
 const StyledFilterPanel = styled.div`
   background-color: ${(props) => props.theme.colors.white};
@@ -19,35 +19,41 @@ const StyledFilterPanel = styled.div`
 `;
 
 const FilterPanel = () => {
-  const { filter, setFilter, categories } = useContext(Appcontext);
+  const { setCategoryFilter, statusFilter, setStatusFilter, categories } = useContext(Appcontext);
   return (
     <StyledFilterPanel>
       <div>
         <Combobox
           OnClick={(opt) => {
-            setFilter({ ...filter, category: opt });
+            setCategoryFilter(opt);
           }}
           Options={categories}
         />
       </div>
       <div>
-        <Checkbox
+        <Radiobox
           OnClick={() => {
-            setFilter({ ...filter, Sold: !filter.Sold });
+            setStatusFilter("sold");
+            setCategoryFilter("All");
           }}
           name="Sold"
+          checked={statusFilter === "sold"}
         />
-        <Checkbox
+        <Radiobox
           OnClick={() => {
-            setFilter({ ...filter, Available: !filter.Available });
+            setStatusFilter("available");
+            setCategoryFilter("All");
           }}
           name="Available"
+          checked={statusFilter === "available"}
         />
-        <Checkbox
+        <Radiobox
           OnClick={() => {
-            setFilter({ ...filter, Pending: !filter.Pending });
+            setStatusFilter("pending");
+            setCategoryFilter("All");
           }}
           name="Pending"
+          checked={statusFilter === "pending"}
         />
       </div>
     </StyledFilterPanel>

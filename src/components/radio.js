@@ -12,13 +12,13 @@ const StyledCheckbox = styled.input`
   cursor: pointer;
 `;
 
-const Checkbox = ({ OnClick, name }) => {
+const Radiobox = ({ OnClick, name, checked }) => {
   return (
     <>
       <Label htmlFor={name}>{name}</Label>
-      <StyledCheckbox type="checkbox" name={name} id={name} onClick={OnClick} />
+      <StyledCheckbox type="radio" name={name} id={name} onClick={OnClick} checked={checked} />
     </>
   );
 };
 
-export default Checkbox;
+export default Radiobox;

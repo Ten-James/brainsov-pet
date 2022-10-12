@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router";
 import Navigation from "./components/navbar";
 import PetView from "./components/petView";
 import FullPetView from "./components/fullPetView";
+import { FetchData, changeStatusAndUpdate } from "./ApiHandler";
 const AppContainer = Styled.div`
   width: 100vw;
   height: 100vh;
@@ -15,62 +16,54 @@ export const API = "petstore.swagger.io/v2";
 export const Appcontext = createContext();
 
 function App() {
-  const [data, setData] = useState([]);
+  // TODO merge these into one state, i dont like how it splits up the data.
+  // its propably better to have them splitted, so we dont have to filter the data
+  // everytime we want to change the status
+  // also updetePet is stupidly complicated cause of this
+  const [soldPets, setSoldPets] = useState([]);
+  const [pendingPets, setPendingPets] = useState([]);
+  const [availablePets, setAvailablePets] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [filter, setFilter] = useState({ sold: false, available: false, pending: false, category: "" });
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("sold");
   const [error, setError] = useState(null);
 
-  //TODO separated file
-
-  //TODO petID notworking good wasted 30 mins on this
-  const changeStatus = (id, name, status) => {
-    console.log(id, status);
-    const encodedNameKey = encodeURIComponent("name");
-    const encodedNameValue = encodeURIComponent(name);
-    const encodedStatusKey = encodeURIComponent("status");
-    const encodedStatusValue = encodeURIComponent(status);
-    const formBody = encodedNameKey + "=" + encodedNameValue + "&" + encodedStatusKey + "=" + encodedStatusValue;
-    console.log(formBody);
-    fetch(`https://${API}/pet/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        accept: "application/json",
-      },
-      body: formBody,
-    })
-      .then((res) => {
-        if (res.ok) {
-          setData(data.map((pet) => (pet.id === id ? { ...pet, status: status } : pet)));
-        }
-        console.log(res);
-      })
-      .catch((err) => {
-        setError(err);
-      });
+  // need to be initialized in this scope
+  const updatePet = (id, status) => {
+    //find in which array the pet is
+    const getPetAndStatus = () => {
+      let pet = undefined;
+      pet = soldPets.find((pet) => pet.id === id);
+      if (pet) return [pet, "sold"];
+      pet = pendingPets.find((pet) => pet.id === id);
+      if (pet) return [pet, "pending"];
+      pet = availablePets.find((pet) => pet.id === id);
+      if (pet) return [pet, "available"];
+    };
+    const [pet, oldStatus] = getPetAndStatus();
+    //remove from old array and get the pet
+    if (oldStatus === "sold") {
+      setSoldPets(soldPets.filter((pet) => pet.id !== id));
+    } else if (oldStatus === "pending") {
+      setPendingPets(pendingPets.filter((pet) => pet.id !== id));
+    } else if (oldStatus === "available") {
+      setAvailablePets(availablePets.filter((pet) => pet.id !== id));
+    }
+    pet.status = status;
+    //add to new array
+    if (status === "sold") setSoldPets([...soldPets, pet]);
+    else if (status === "pending") setPendingPets([...pendingPets, pet]);
+    else if (status === "available") setAvailablePets([...availablePets, pet]);
   };
 
+  //provided handlers
+  const changeStatus = (id, status) => changeStatusAndUpdate(updatePet, setError, id, status);
+  const FetchSold = () => FetchData("sold", setSoldPets, setError, setCategories);
+  const FetchPending = () => FetchData("pending", setPendingPets, setError, setCategories);
+  const FetchAvailable = () => FetchData("available", setAvailablePets, setError, setCategories);
+
   useEffect(() => {
-    //TODO backend optimization send some data then rest
-    try {
-      fetch(`https://${API}/pet/findByStatus?status=sold&status=available&status=pending`, { method: "GET" }).then((res) => {
-        res.json().then((res) => {
-          setData(res);
-          //get categories
-          let cats = [""];
-          res.forEach((pet) => {
-            if (pet.category) {
-              if (!cats.includes(pet.category.name)) {
-                cats.push(pet.category.name);
-              }
-            }
-          });
-          setCategories(cats);
-        });
-      });
-    } catch (e) {
-      setError(e);
-    }
+    FetchSold();
     return () => {};
   }, []);
   if (error)
@@ -80,7 +73,22 @@ function App() {
       </AppContainer>
     );
   return (
-    <Appcontext.Provider value={{ data, setData, filter, setFilter, categories, changeStatus }}>
+    <Appcontext.Provider
+      value={{
+        soldPets,
+        pendingPets,
+        availablePets,
+        FetchSold,
+        FetchAvailable,
+        FetchPending,
+        statusFilter,
+        setStatusFilter,
+        categoryFilter,
+        setCategoryFilter,
+        categories,
+        changeStatus,
+      }}
+    >
       <Routes>
         <Route path="/pet/*" element={<FullPetView />} />
         <Route
