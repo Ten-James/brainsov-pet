@@ -6,7 +6,7 @@ Estimated time to complete: 2-3 hours
 
 Real time: 3.5 hours
 
-![sketch](./sketch.png)
+![sketch](./sketch.PNG)
 
 Font: Oswald
 
